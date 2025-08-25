@@ -1,7 +1,4 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
-  {
   "compilerOptions": {
     "target": "ES2020",
     "module": "NodeNext",
@@ -14,6 +11,6 @@
     "sourceMap": true
   },
   "include": ["server/**/*.ts"],
-  "exclude": ["node_modules", "client"]
-},
+  "exclude": ["node_modules", "client", "dist", "build", "**/*.test.ts"]
 }
+
