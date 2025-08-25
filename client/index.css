@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --homa-blue: 190 50% 35%;
+    
+    /* Define the actual color value directly for fallback use */
+    --homa-blue-solid: #2d8a9a;
+    
+    /* Override default input color for shadcn components */
+    --input: 0 0% 100%; /* White background */
+    --border: 220 14% 84%; /* Light gray border color */
+    
+    /* Explicitly override secondary color to use neutral gray instead of blue */
+    --secondary: 0 0% 88%; /* neutral-200 */
+    --secondary-foreground: 0 0% 27%; /* neutral-700 */
+  }
+  
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased text-foreground;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+  }
+  
+  /* Force all inputs to have grey backgrounds and borders */
+  input, select, textarea, .select-trigger, [class*="border"] {
+    border-color: #d1d5db !important;
+    background-color: white !important;
+  }
+  
+  /* Force TabsList to use neutral gray instead of light blue */
+  [role="tablist"], 
+  div[role="tablist"],
+  .TabsList,
+  div[class*="TabsList"],
+  div[class*="tabs-list"],
+  div[class*="tabslist"] {
+    background-color: #e5e5e5 !important; /* neutral-200 */
+  }
+  
+  /* Target specifically the Local Destinations tabs container */
+  div[class*="LocalDestinations"] [role="tablist"],
+  div[class*="local-destinations"] [role="tablist"],
+  .force-gray-tabs {
+    background-color: var(--homa-blue-solid) !important; /* Homa teal */
+    background: var(--homa-blue-solid) !important;
+    background-image: none !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium tracking-tight;
+    letter-spacing: -0.02em;
+  }
+
+  /* Clean container styles */
+  .container {
+    @apply px-4 md:px-6;
+  }
+
+  /* Card styles with color accents */
+  .card {
+    @apply bg-white border-0 shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+
+  /* Colorful accent backgrounds */
+  .bg-accent-1 {
+    @apply bg-homa-blue/10; /* Lighter version of homa-blue color */
+  }
+  
+  .bg-accent-2 {
+    @apply bg-emerald-50;
+  }
+  
+  .bg-accent-3 {
+    @apply bg-amber-50;
+  }
+  
+  .bg-accent-4 {
+    @apply bg-rose-50;
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-primary {
+    background: hsl(var(--homa-blue));
+  }
+
+  .bg-gradient-secondary {
+    background: hsl(var(--homa-blue) / 0.9);
+  }
+  
+  /* Text gradients */
+  .text-gradient-primary {
+    color: hsl(var(--homa-blue));
+  }
+
+  /* Standard color classes */
+  .text-homa-blue {
+    color: hsl(var(--homa-blue));
+    color: var(--homa-blue-solid); /* Fallback solid color */
+  }
+
+  .bg-homa-blue {
+    background-color: hsl(var(--homa-blue));
+    background-color: var(--homa-blue-solid); /* Fallback solid color */
+  }
+  
+  /* Border and focus colors for inputs and selects */
+  .border-homa-blue {
+    border-color: hsl(var(--homa-blue));
+    border-color: var(--homa-blue-solid); /* Fallback solid color */
+  }
+  
+  /* For UI controls focused state */
+  .ring-homa-blue {
+    --tw-ring-color: hsl(var(--homa-blue));
+    --tw-ring-color: var(--homa-blue-solid); /* Fallback solid color */
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    background-color: hsla(var(--homa-blue), 0.1);
+    color: hsl(var(--homa-blue));
+  }
+
+  .badge-blue {
+    background-color: hsla(var(--homa-blue), 0.2);
+    color: hsl(var(--homa-blue));
+  }
+
+  .badge-green {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-amber {
+    @apply bg-amber-100 text-amber-800;
+  }
+
+  .badge-rose {
+    @apply bg-rose-100 text-rose-800;
+  }
+
+  /* Subtle shadows */
+  .shadow-minimal {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Colorful shadow highlights */
+  .shadow-blue {
+    box-shadow: 0 4px 14px hsla(var(--homa-blue), 0.2);
+  }
+
+  .shadow-green {
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+  }
+
+  .shadow-amber {
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.15);
+  }
+}
