@@ -1,4 +1,3 @@
-// server/index.ts
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,14 +7,17 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Simple health check
+// Health check
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
-// Serve the built client (Vite outputs to client/dist at the project root)
-const clientDist = path.resolve(__dirname, "../client/dist");
-app.use(express.static(clientDist));
+// IMPORTANT: serve the Vite build output at dist/public
+// At runtime, __dirname === <repo>/dist/server
+const publicDir = path.resolve(__dirname, "../public");
+app.use(express.static(publicDir));
+
+// SPA fallback (send index.html for client routes)
 app.get("*", (_req, res) => {
-  res.sendFile(path.join(clientDist, "index.html"));
+  res.sendFile(path.join(publicDir, "index.html"));
 });
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
