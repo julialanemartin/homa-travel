@@ -1,0 +1,75 @@
+/* Custom CSS for the Local Destinations page */
+
+/* Add specific styling for local-tabs class */
+.local-tabs {
+  background-color: white !important;
+  border-color: #e5e7eb !important;
+  color: #333 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Override badge components to use blue */
+.badge[class*="secondary"],
+[class*="badge"][class*="secondary"] {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  border-color: #93c5fd !important;
+}
+
+/* Ensure the tab buttons have proper styling */
+[role="tab"] {
+  background-color: white !important;
+  color: #333 !important;
+  border: 1px solid #e5e7eb !important;
+  border-bottom: none !important;
+  border-radius: 4px 4px 0 0 !important;
+  margin-right: 2px !important;
+}
+
+/* Style active tab */
+[role="tab"][aria-selected="true"] {
+  background-color: white !important;
+  color: #2d8a9a !important;
+  border-bottom-color: white !important;
+  box-shadow: none !important;
+  z-index: 1 !important;
+}
+
+/* Apply blue to secondary background elements */
+.bg-secondary, 
+[class*="bg-secondary"] {
+  background-color: #dbeafe !important;
+}
+
+/* Last resort: prevent gray styling from other components */
+[style*="background"] {
+  background-color: unset;
+}
+
+/* Force Homa teal on input focus */
+input:focus,
+.input:focus,
+[class*="input-"]:focus {
+  border-color: #2d8a9a !important;
+  outline-color: #2d8a9a !important;
+  box-shadow: 0 0 0 1px #2d8a9a !important;
+}
+
+/* Apply Homa teal to select components and focus rings */
+[role="combobox"]:focus,
+[data-state="open"],
+select:focus,
+.select:focus {
+  border-color: #2d8a9a !important;
+  outline-color: #2d8a9a !important;
+  box-shadow: 0 0 0 1px #2d8a9a !important;
+}
+
+/* Force select trigger to use Homa teal when focused */
+[class*="SelectTrigger"]:focus,
+[class*="selectTrigger"]:focus {
+  border-color: #2d8a9a !important;
+  outline-color: #2d8a9a !important;
+  box-shadow: 0 0 0 1px #2d8a9a !important;
+}
