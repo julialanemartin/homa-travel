@@ -1,0 +1,597 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Destination } from '@/lib/types';
+import { apiRequest } from '@/lib/queryClient';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { Download, Share2, Camera, Paintbrush, MessageSquare, Copy, Check } from 'lucide-react';
+
+interface StoryContent {
+  caption: string;
+  hashtags: string[];
+  title: string;
+  shortDescription: string;
+  callToAction: string;
+}
+
+interface StoryGeneratorProps {
+  initialDestinationId?: number;
+}
+
+export default function StoryGenerator({ initialDestinationId }: StoryGeneratorProps) {
+  const [selectedDestinationId, setSelectedDestinationId] = useState<number | null>(initialDestinationId || null);
+  const [mood, setMood] = useState<string>('excited');
+  const [travelStyle, setTravelStyle] = useState<string>('adventure');
+  const [socialPlatform, setSocialPlatform] = useState<string>('instagram');
+  const [filter, setFilter] = useState<string>('original');
+  const [brightness, setBrightness] = useState<number>(100);
+  const [contrast, setContrast] = useState<number>(100);
+  const [saturation, setSaturation] = useState<number>(100);
+  const [storyContent, setStoryContent] = useState<StoryContent | null>(null);
+  const [styleRecommendation, setStyleRecommendation] = useState<string>('');
+  const [activeTab, setActiveTab] = useState('design');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { toast } = useToast();
+
+  // Fetch all destinations
+  const { data: destinations, isLoading: isLoadingDestinations } = useQuery<Destination[]>({
+    queryKey: ['/api/destinations'],
+  });
+
+  // Update selected destination when initialDestinationId changes
+  useEffect(() => {
+    if (initialDestinationId && destinations) {
+      const destination = destinations.find(d => d.id === initialDestinationId);
+      if (destination) {
+        setSelectedDestinationId(initialDestinationId);
+        setSelectedDestination(destination);
+      }
+    }
+  }, [initialDestinationId, destinations]);
+
+  const handleDestinationChange = (id: string) => {
+    const numId = parseInt(id, 10);
+    setSelectedDestinationId(numId);
+    if (destinations) {
+      const destination = destinations.find(d => d.id === numId);
+      setSelectedDestination(destination || null);
+    }
+  };
+
+  // Used as a placeholder when API is unavailable
+  const getPlaceholderContent = (): { storyContent: StoryContent, styleRecommendation: string } => {
+    // This is a placeholder to demonstrate UI functionality when API is unavailable
+    let placeholderContent: StoryContent = {
+      title: "Your Amazing Travel Adventure",
+      caption: "Exploring the wonders of this destination with every step. The journey is just as beautiful as the destination.",
+      hashtags: ["travel", "adventure", "wanderlust", "explore", "photography"],
+      shortDescription: "Create memories that will last a lifetime in this breathtaking destination.",
+      callToAction: "Book your trip today and experience the magic yourself!"
+    };
+    
+    if (selectedDestination) {
+      placeholderContent = {
+        title: `Discovering ${selectedDestination.name}`,
+        caption: `Immersing myself in the beauty of ${selectedDestination.name}. ${selectedDestination.description.split('.')[0]}.`,
+        hashtags: ["travel", selectedDestination.name.toLowerCase().replace(/\s+/g, ''), "adventure", "wanderlust", "explore"],
+        shortDescription: selectedDestination.description.split('.')[0] + '.',
+        callToAction: `Ready to explore ${selectedDestination.name}? Start planning your trip today!`
+      };
+    }
+    
+    return {
+      storyContent: placeholderContent,
+      styleRecommendation: "Try using natural lighting with warm tones to capture the essence of your travel experience."
+    };
+  };
+
+  const generateStory = async () => {
+    if (!selectedDestinationId) {
+      toast({
+        title: "Destination Required",
+        description: "Please select a destination to generate a story.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    
+    try {
+      const response = await apiRequest('POST', '/api/generate-story', {
+        destinationId: selectedDestinationId,
+        mood,
+        travelStyle,
+        socialPlatform
+      });
+      
+      const data = await response.json();
+      
+      // Check if API returned an error code (like invalid_api_key)
+      if (data.code && data.code === 'invalid_api_key') {
+        console.warn('API key issue detected, using placeholder content');
+        // Use placeholder content as a fallback
+        const placeholderData = getPlaceholderContent();
+        setStoryContent(placeholderData.storyContent);
+        setStyleRecommendation(placeholderData.styleRecommendation);
+        setActiveTab('content');
+        
+        toast({
+          title: "Demo Mode",
+          description: "The AI service is currently unavailable. Using demo content instead."
+        });
+      } else {
+        // Normal flow with real API data
+        setStoryContent(data.storyContent);
+        setStyleRecommendation(data.styleRecommendation);
+        setActiveTab('content');
+        
+        toast({
+          title: "Story Generated",
+          description: "Your social media story has been created!",
+        });
+      }
+    } catch (error) {
+      console.error('Error generating story:', error);
+      
+      // Check if response contains error message
+      let errorMessage = "Failed to generate story content. Please try again.";
+      let isApiKeyError = false;
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        isApiKeyError = errorMessage.includes("API key");
+      } else if (typeof error === 'object' && error !== null) {
+        if ('message' in error) {
+          errorMessage = (error as any).message;
+          isApiKeyError = errorMessage.includes("API key");
+        }
+        if ('code' in error && (error as any).code === 'invalid_api_key') {
+          isApiKeyError = true;
+        }
+      }
+      
+      // Use placeholder content for API key issues
+      if (isApiKeyError) {
+        console.warn('API key issue detected in error handler, using placeholder content');
+        const placeholderData = getPlaceholderContent();
+        setStoryContent(placeholderData.storyContent);
+        setStyleRecommendation(placeholderData.styleRecommendation);
+        setActiveTab('content');
+        
+        toast({
+          title: "Demo Mode",
+          description: "The AI service is currently unavailable. Using demo content instead."
+        });
+      } else {
+        // Display error for other issues
+        toast({
+          title: "Generation Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleFilterChange = (value: string) => {
+    setFilter(value);
+    applyFiltersToCanvas();
+  };
+
+  const handleSliderChange = (
+    type: 'brightness' | 'contrast' | 'saturation',
+    value: number[]
+  ) => {
+    switch (type) {
+      case 'brightness':
+        setBrightness(value[0]);
+        break;
+      case 'contrast':
+        setContrast(value[0]);
+        break;
+      case 'saturation':
+        setSaturation(value[0]);
+        break;
+    }
+    applyFiltersToCanvas();
+  };
+
+  const applyFiltersToCanvas = () => {
+    // Canvas image processing would go here in a real implementation
+    // This would apply filters and adjustments to the image
+    // For now, this is a placeholder
+  };
+
+  const downloadStory = () => {
+    if (canvasRef.current) {
+      // Convert canvas to image URL and trigger download
+      const dataUrl = canvasRef.current.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `${selectedDestination?.name || 'travel'}-story.png`;
+      a.click();
+      
+      toast({
+        title: "Download Complete",
+        description: "Your story image has been downloaded successfully!",
+      });
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setHasCopied(true);
+    setTimeout(() => setHasCopied(false), 2000);
+    
+    toast({
+      title: "Copied to Clipboard",
+      description: "Text has been copied to your clipboard.",
+    });
+  };
+
+  const renderCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas || !selectedDestination) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // In a real implementation, we would:
+    // 1. Load the destination image
+    // 2. Apply filters (brightness, contrast, saturation)
+    // 3. Add text overlays with the story content
+    // 4. Handle different layout templates based on social platform
+
+    // For now, we'll just draw a placeholder
+    ctx.fillStyle = '#f0f9ff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw a placeholder for the destination image
+    ctx.fillStyle = '#0ea5e9';
+    ctx.fillRect(20, 20, canvas.width - 40, canvas.height / 2);
+    
+    // Add text content
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 24px Arial';
+    ctx.fillText(storyContent?.title || selectedDestination.name, 30, canvas.height / 2 + 50);
+    
+    ctx.font = '16px Arial';
+    ctx.fillText(storyContent?.shortDescription || selectedDestination.description.slice(0, 50) + '...', 30, canvas.height / 2 + 80);
+  };
+
+  // Render the canvas whenever relevant state changes
+  useEffect(() => {
+    if (selectedDestination) {
+      renderCanvas();
+    }
+  }, [selectedDestination, storyContent, filter, brightness, contrast, saturation]);
+
+  return (
+    <div className="w-full max-w-6xl mx-auto p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <Card className="p-6">
+            <h2 className="text-2xl font-bold mb-4">Create Your Travel Story</h2>
+            
+            <div className="mb-6">
+              <Label htmlFor="destination">Destination</Label>
+              <Select 
+                value={selectedDestinationId?.toString() || ''} 
+                onValueChange={handleDestinationChange}
+              >
+                <SelectTrigger id="destination" className="w-full">
+                  <SelectValue placeholder="Select a destination" />
+                </SelectTrigger>
+                <SelectContent>
+                  {isLoadingDestinations ? (
+                    <SelectItem value="loading" disabled>Loading destinations...</SelectItem>
+                  ) : (
+                    destinations?.map(destination => (
+                      <SelectItem key={destination.id} value={destination.id.toString()}>
+                        {destination.name} {destination.continent ? `(${destination.continent})` : ''}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="w-full mb-6">
+                <TabsTrigger value="design" className="flex-1">
+                  <Paintbrush className="h-4 w-4 mr-2" />
+                  Design
+                </TabsTrigger>
+                <TabsTrigger value="content" className="flex-1">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Content
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="design">
+                <div className="space-y-6">
+                  <div>
+                    <Label htmlFor="mood">Mood</Label>
+                    <Select value={mood} onValueChange={setMood}>
+                      <SelectTrigger id="mood" className="w-full">
+                        <SelectValue placeholder="Select mood" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="excited">Excited</SelectItem>
+                        <SelectItem value="relaxed">Relaxed</SelectItem>
+                        <SelectItem value="adventurous">Adventurous</SelectItem>
+                        <SelectItem value="romantic">Romantic</SelectItem>
+                        <SelectItem value="nostalgic">Nostalgic</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="travelStyle">Travel Style</Label>
+                    <Select value={travelStyle} onValueChange={setTravelStyle}>
+                      <SelectTrigger id="travelStyle" className="w-full">
+                        <SelectValue placeholder="Select travel style" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="adventure">Adventure</SelectItem>
+                        <SelectItem value="relaxation">Relaxation</SelectItem>
+                        <SelectItem value="culinary">Culinary</SelectItem>
+                        <SelectItem value="cultural">Cultural</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="platform">Social Platform</Label>
+                    <Select value={socialPlatform} onValueChange={setSocialPlatform}>
+                      <SelectTrigger id="platform" className="w-full">
+                        <SelectValue placeholder="Select platform" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="instagram">Instagram</SelectItem>
+                        <SelectItem value="facebook">Facebook</SelectItem>
+                        <SelectItem value="twitter">Twitter (X)</SelectItem>
+                        <SelectItem value="tiktok">TikTok</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <Button 
+                    onClick={generateStory} 
+                    className="w-full" 
+                    disabled={!selectedDestinationId || isGenerating}
+                  >
+                    {isGenerating ? "Generating..." : "Generate Story"}
+                  </Button>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="content">
+                {storyContent ? (
+                  <div className="space-y-6">
+                    {styleRecommendation && (
+                      <div className="p-3 rounded-lg text-white text-sm" style={{ backgroundColor: 'hsl(190, 50%, 35%)' }}>
+                        <p className="font-medium">Suggested Style:</p>
+                        <p>{styleRecommendation}</p>
+                      </div>
+                    )}
+                  
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <Label htmlFor="title">Title</Label>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-6 p-1" 
+                          onClick={() => copyToClipboard(storyContent.title)}
+                        >
+                          {hasCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                        </Button>
+                      </div>
+                      <Input 
+                        id="title"
+                        value={storyContent.title} 
+                        onChange={(e) => setStoryContent({...storyContent, title: e.target.value})}
+                      />
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <Label htmlFor="caption">Caption</Label>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-6 p-1"
+                          onClick={() => copyToClipboard(storyContent.caption)}
+                        >
+                          {hasCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                        </Button>
+                      </div>
+                      <Textarea 
+                        id="caption"
+                        value={storyContent.caption} 
+                        onChange={(e) => setStoryContent({...storyContent, caption: e.target.value})}
+                        rows={4}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="hashtags" className="mb-1 block">Hashtags</Label>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {storyContent.hashtags.map((tag, index) => (
+                          <div key={index} className="px-2 py-1 rounded-full text-sm text-white" style={{ backgroundColor: 'hsl(190, 50%, 35%)' }}>
+                            #{tag}
+                          </div>
+                        ))}
+                      </div>
+                      <Input 
+                        id="hashtags"
+                        placeholder="Add more hashtags (comma separated)" 
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && e.currentTarget.value) {
+                            const newTags = e.currentTarget.value.split(',').map(tag => tag.trim()).filter(Boolean);
+                            if (newTags.length) {
+                              setStoryContent({
+                                ...storyContent, 
+                                hashtags: [...storyContent.hashtags, ...newTags]
+                              });
+                              e.currentTarget.value = '';
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="callToAction" className="mb-1 block">Call To Action</Label>
+                      <Input 
+                        id="callToAction"
+                        value={storyContent.callToAction} 
+                        onChange={(e) => setStoryContent({...storyContent, callToAction: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center p-8">
+                    <p className="text-gray-500 mb-4">Generate a story first to see content options</p>
+                    <Button 
+                      onClick={generateStory} 
+                      disabled={!selectedDestinationId || isGenerating}
+                    >
+                      {isGenerating ? "Generating..." : "Generate Now"}
+                    </Button>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          </Card>
+        </div>
+        
+        <div>
+          <Card className="p-6">
+            <h2 className="text-2xl font-bold mb-4">Preview & Share</h2>
+            
+            <div className="bg-gray-100 rounded-lg p-4 mb-6 flex justify-center">
+              <canvas 
+                ref={canvasRef} 
+                width="400" 
+                height="500" 
+                className="border border-gray-200 rounded-lg bg-white shadow-sm"
+              ></canvas>
+            </div>
+            
+            {selectedDestination && (
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <h3 className="font-semibold">Image Filters</h3>
+                  <div className="grid grid-cols-5 gap-2">
+                    {['original', 'vintage', 'monochrome', 'vivid', 'muted'].map((filterOption) => (
+                      <button
+                        key={filterOption}
+                        onClick={() => handleFilterChange(filterOption)}
+                        className={`p-2 text-xs rounded-md ${
+                          filter === filterOption 
+                            ? 'text-white font-medium' 
+                            : 'bg-gray-50 text-gray-600'
+                        }`}
+                        style={filter === filterOption ? { backgroundColor: 'hsl(190, 50%, 35%)' } : {}}
+                      >
+                        {filterOption.charAt(0).toUpperCase() + filterOption.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <h3 className="font-semibold">Adjustments</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <Label htmlFor="brightness">Brightness</Label>
+                        <span className="text-xs text-gray-500">{brightness}%</span>
+                      </div>
+                      <Slider
+                        id="brightness"
+                        min={50}
+                        max={150}
+                        step={1}
+                        value={[brightness]}
+                        onValueChange={(value) => handleSliderChange('brightness', value)}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <Label htmlFor="contrast">Contrast</Label>
+                        <span className="text-xs text-gray-500">{contrast}%</span>
+                      </div>
+                      <Slider
+                        id="contrast"
+                        min={50}
+                        max={150}
+                        step={1}
+                        value={[contrast]}
+                        onValueChange={(value) => handleSliderChange('contrast', value)}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <Label htmlFor="saturation">Saturation</Label>
+                        <span className="text-xs text-gray-500">{saturation}%</span>
+                      </div>
+                      <Slider
+                        id="saturation"
+                        min={50}
+                        max={150}
+                        step={1}
+                        value={[saturation]}
+                        onValueChange={(value) => handleSliderChange('saturation', value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4">
+                  <Button 
+                    className="flex-1" 
+                    variant="outline"
+                    onClick={downloadStory}
+                    disabled={!storyContent}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Download
+                  </Button>
+                  <Button 
+                    className="flex-1"
+                    disabled={!storyContent}
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
