@@ -1,9 +1,14 @@
-require('dotenv').config({ path: '../.env' });
-const { Pool } = require('pg');
+import dotenv from "dotenv";
+import pkg from "pg";
+
+dotenv.config({ path: "../.env" });
+
+const { Pool } = pkg;
 
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+   ssl: { rejectUnauthorized: false },
 });
 
 async function createTables() {

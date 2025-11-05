@@ -1,6 +1,10 @@
-require('dotenv').config({ path: '../.env' });
-const bcrypt = require('bcrypt');
-const { Pool } = require('pg');
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import pkg from "pg";
+
+dotenv.config({ path: "../.env" });
+
+const { Pool } = pkg;
 
 // Database connection
 const pool = new Pool({
