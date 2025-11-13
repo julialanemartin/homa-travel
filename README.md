@@ -14,8 +14,8 @@ Authentication system with Express, Passport, and React.
 
 ### Prerequisites
 
-- Node.js (v14+)
-- PostgreSQL database (Supabase)
+- Node.js (v20+)
+- PostgreSQL database (Supabase or any PostgreSQL instance)
 
 ### Environment Variables
 
@@ -24,15 +24,16 @@ Create a `.env` file in the root directory with the following variables:
 ```
 # Database
 DATABASE_URL=postgresql://user:password@host:port/database
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your-supabase-anon-key
 
 # Session
 SESSION_SECRET=your-super-secret-session-key-change-in-production
 
-# Email (for password reset)
-EMAIL_FROM=noreply@example.com
-EMAIL_SERVER=smtp://user:pass@smtp.example.com:587
+# Email (Resend API for password reset)
+RESEND_API_KEY=your-resend-api-key
+
+# Admin User (Optional - for seeding)
+ADMIN_EMAIL=admin@homatravel.com
+ADMIN_PASSWORD=Admin123!
 
 # App
 NODE_ENV=development
@@ -51,13 +52,13 @@ npm install
 
 ```bash
 # Run migrations to create tables
-node scripts/migrate.js
+npm run db:migrate
 ```
 
 3. (Optional) Seed an admin user:
 
 ```bash
-node scripts/seed.js
+npm run db:seed
 ```
 
 4. Start the development server:
@@ -77,6 +78,41 @@ npm run build
 ```bash
 npm start
 ```
+
+## Database Management
+
+### Available Commands
+
+```bash
+# Generate migrations from schema changes
+npm run db:generate
+
+# Run pending migrations
+npm run db:migrate
+
+# Seed admin user
+npm run db:seed
+
+# Push schema changes directly (development only)
+npm run db:push
+
+# Open Drizzle Studio (database GUI)
+npm run db:studio
+```
+
+### Making Schema Changes
+
+1. Update schema in `server/db/schema.ts`
+2. Generate migration: `npm run db:generate`
+3. Review the generated SQL in `migrations/` directory
+4. Apply migration: `npm run db:migrate`
+
+### Database Technology Stack
+
+- **ORM**: Drizzle ORM v0.39.1
+- **Migration Tool**: Drizzle Kit v0.30.4
+- **Database Driver**: postgres v3.4.7
+- **Session Store**: connect-pg-simple
 
 ## API Endpoints
 
