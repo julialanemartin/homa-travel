@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { BlogPost } from '@/lib/types';
+import { BlogPost } from '@/lib/types.js';
 import { format } from 'date-fns';
 
 interface BlogCardProps {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button.js';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.js';
+import { Label } from '@/components/ui/label.js';
 import { ArrowRight, Mountain, Umbrella, Utensils, Landmark } from 'lucide-react';
 
 type TravelStyle = 'adventure' | 'relaxation' | 'culinary' | 'cultural';

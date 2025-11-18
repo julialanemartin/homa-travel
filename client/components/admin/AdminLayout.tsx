@@ -1,10 +1,10 @@
 import React from 'react';
 import { useLocation, Link } from 'wouter';
 import { Helmet } from 'react-helmet';
-import { useAdminAuth } from '@/hooks/use-admin-auth';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { HomaLogo } from '@/components/logo/HomaLogo';
+import { useAdminAuth } from '@/hooks/use-admin-auth.js';
+import { Separator } from '@/components/ui/separator.js';
+import { Button } from '@/components/ui/button.js';
+import { HomaLogo } from '@/components/logo/HomaLogo.js';
 import { 
   LayoutDashboard, 
   Globe, 

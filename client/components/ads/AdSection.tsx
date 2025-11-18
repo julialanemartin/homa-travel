@@ -1,6 +1,6 @@
 import React from 'react';
-import { GoogleAd } from './GoogleAd';
-import { cn } from '@/lib/utils';
+import { GoogleAd } from './GoogleAd.js';
+import { cn } from '@/lib/utils.js';
 
 // Different standard ad sizes
 export type AdSize = 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { apiRequest } from '@/lib/queryClient.js';
+import { useToast } from '@/hooks/use-toast.js';
+import { Button } from '@/components/ui/button.js';
+import { Input } from '@/components/ui/input.js';
 
 export default function Newsletter() {
   const [name, setName] = useState('');

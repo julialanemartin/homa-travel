@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Redirect } from 'wouter';
-import { useAdminAuth } from '@/hooks/use-admin-auth';
+import { useAdminAuth } from '@/hooks/use-admin-auth.js';
 import { Loader2 } from 'lucide-react';
 
 type RouteParams = { [paramName: string]: string | undefined };

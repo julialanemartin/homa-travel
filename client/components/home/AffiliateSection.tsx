@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { AffiliateProduct } from '@/components/affiliate';
+import { Card, CardContent, CardFooter } from '@/components/ui/card.js';
+import { Button } from '@/components/ui/button.js';
+import { AffiliateProduct } from '@/components/affiliate/AffiliateProduct.js';
 import { ArrowRight, ShoppingCart } from 'lucide-react';
 
 export default function AffiliateSection() {

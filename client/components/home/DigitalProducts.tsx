@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { Product } from '@/lib/types';
-import ProductCard from '@/components/shop/ProductCard';
+import { Product } from '@/lib/types.js';
+import ProductCard from '@/components/shop/ProductCard.js';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.js';
 
 export default function DigitalProducts() {
   const { data: products, isLoading, error } = useQuery<Product[]>({

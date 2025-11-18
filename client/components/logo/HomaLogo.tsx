@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import logoImage from '@assets/Homa Logo.png';
+import { cn } from '@/lib/utils.js';
+import logoImage from '@assets/homa-logo.png';
 
 interface HomaLogoProps {
   className?: string;

@@ -1,3 +1,3 @@
-export * from './AffiliateLink';
-export * from './BookingWidget';
-export * from './AffiliateProduct';
+export * from './AffiliateLink.js';
+export * from './BookingWidget.js';
+export * from './AffiliateProduct.js';

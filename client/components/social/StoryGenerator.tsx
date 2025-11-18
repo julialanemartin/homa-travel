@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Destination } from '@/lib/types';
-import { apiRequest } from '@/lib/queryClient';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { Destination } from '@/lib/types.js';
+import { apiRequest } from '@/lib/queryClient.js';
+import { Button } from '@/components/ui/button.js';
+import { Card } from '@/components/ui/card.js';
+import { Input } from '@/components/ui/input.js';
+import { Label } from '@/components/ui/label.js';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.js';
+import { Slider } from '@/components/ui/slider.js';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.js';
+import { Textarea } from '@/components/ui/textarea.js';
+import { useToast } from '@/hooks/use-toast.js';
 import { Download, Share2, Camera, Paintbrush, MessageSquare, Copy, Check } from 'lucide-react';
 
 interface StoryContent {

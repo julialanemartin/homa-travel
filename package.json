@@ -5,6 +5,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx server/index.ts",
+    "frontend": "vite",
+"frontend:build": "vite build",
+"frontend:preview": "vite preview",
     "build": "vite build && tsc -p tsconfig.json",
     "start": "NODE_ENV=production node --enable-source-maps dist/server/index.js",
     "check": "tsc",

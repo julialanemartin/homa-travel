@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { Compass, Facebook, Twitter, Instagram, Linkedin, Globe, BookOpen, ShoppingBag, MapPin, Info, Mail, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { HomaLogo } from '@/components/logo/HomaLogo';
+import { Button } from '@/components/ui/button.js';
+import { HomaLogo } from '@/components/logo/HomaLogo.js';
 
 export default function Footer() {
   return (

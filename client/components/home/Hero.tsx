@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button.js';
+import { Input } from '@/components/ui/input.js';
 import { Search, Compass, MapPin, Sun } from 'lucide-react';
 
 export default function Hero() {

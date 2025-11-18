@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { requestPasswordReset } from '../../../lib/authApi';
+import { requestPasswordReset } from '../../../lib/authApi.js';
 
 export function PasswordResetRequestForm() {
   const [email, setEmail] = useState('');

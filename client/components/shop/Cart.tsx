@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { useCart } from '@/providers/CartProvider';
+import { useCart } from '@/providers/CartProvider.js';
 import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button.js';
+import { Separator } from '@/components/ui/separator.js';
 
 export default function Cart() {
   const { cartItems, cartTotal, updateQuantity, removeFromCart, clearCart, isLoading } = useCart();

@@ -1,2 +1,2 @@
-export * from './GoogleAd';
-export * from './AdSection';
+export * from './GoogleAd.js';
+export * from './AdSection.js';

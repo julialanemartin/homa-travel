@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Testimonial } from '@/lib/types';
+import { Testimonial } from '@/lib/types.js';
 import { Star } from 'lucide-react';
 
 export default function Testimonials() {

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { AffiliateLink } from './AffiliateLink';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card.js';
+import { Button } from '@/components/ui/button.js';
+import { AffiliateLink } from './AffiliateLink.js';
 import { ShoppingCart } from 'lucide-react';
 
 export type ProductPlatform = 'amazon' | 'rei' | 'worldnomads' | 'custom';

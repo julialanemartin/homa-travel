@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { BlogPost } from '@/lib/types';
+import { BlogPost } from '@/lib/types.js';
 import { format } from 'date-fns';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import BlogCard from '@/components/blog/BlogCard';
+import { Button } from '@/components/ui/button.js';
+import BlogCard from '@/components/blog/BlogCard.js';
 
 export default function BlogSection() {
   const { data: blogPosts, isLoading, error } = useQuery<BlogPost[]>({

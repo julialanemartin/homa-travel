@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { useLocation } from 'wouter';
-import { Product } from '@/lib/types';
+import { Product } from '@/lib/types.js';
 import { Star, StarHalf } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useCart } from '@/providers/CartProvider';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button.js';
+import { useCart } from '@/providers/CartProvider.js';
+import { useToast } from '@/hooks/use-toast.js';
 
 interface ProductCardProps {
   product: Product;

@@ -59,11 +59,11 @@ app.use("/api/auth", authRoutes);
 
 // IMPORTANT: serve the Vite build output at dist/public
 // At runtime, __dirname === <repo>/dist/server
-const publicDir = path.resolve(__dirname, "../public");
+const publicDir = path.resolve(__dirname, "../client");
 app.use(express.static(publicDir));
 
 // SPA fallback (send index.html for client routes)
-app.get("*", (_req, res) => {
+app.get(/.*/, (_req, res) => {
   res.sendFile(path.join(publicDir, "index.html"));
 });
 

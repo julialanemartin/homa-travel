@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
-import { Destination } from '@/lib/types';
+import { Destination } from '@/lib/types.js';
 import { Heart, Star, MapPin } from 'lucide-react';
 
 interface DestinationCardProps {

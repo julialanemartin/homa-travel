@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.js';
 import { Camera, Share2, Sparkles, TrendingUp } from 'lucide-react';
 
 export default function SocialStoryPromo() {

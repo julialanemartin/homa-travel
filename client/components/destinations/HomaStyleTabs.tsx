@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.js";
 
 // Create a styled wrapper for the Homa-styled tabs
 export function HomaStyleTabs({

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { useCart } from '@/providers/CartProvider';
-import { useAuth } from '@/hooks/use-auth';
+import { Button } from '@/components/ui/button.js';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet.js';
+import { useCart } from '@/providers/CartProvider.js';
+import { useAuth } from '@/hooks/use-auth.js';
 import { Compass, User, ShoppingBag, Search, Menu, X, LogOut, LogIn, Loader2, Globe, BookOpen, MapPin, Info, DollarSign, MapPinned, Camera, Plane, Pin, Layout, Calendar } from 'lucide-react';
-import { HomaLogo } from '@/components/logo/HomaLogo';
+import { HomaLogo } from '@/components/logo/HomaLogo.js';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu.js";
 
 export default function Header() {
   const [, setLocation] = useLocation();

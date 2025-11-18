@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import useEmblaCarousel from 'embla-carousel-react';
-import { Destination } from '@/lib/types';
+import { Destination } from '@/lib/types.js';
 import { ChevronLeft, ChevronRight, MapPin, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button.js';
+import { Badge } from '@/components/ui/badge.js';
 
 export default function DestinationCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });

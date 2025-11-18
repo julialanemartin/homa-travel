@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { Destination } from '@/lib/types';
-import DestinationCard from '@/components/destinations/DestinationCard';
-import DestinationCarousel from '@/components/home/DestinationCarousel';
+import { Destination } from '@/lib/types.js';
+import DestinationCard from '@/components/destinations/DestinationCard.js';
+import DestinationCarousel from '@/components/home/DestinationCarousel.js';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.js';
 
 export default function FeaturedDestinations() {
   const { data: destinations, isLoading, error } = useQuery<Destination[]>({

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { resetPassword } from '../../../lib/authApi';
+import { resetPassword } from '../../../lib/authApi.js';
 
 export function PasswordResetForm() {
   const [password, setPassword] = useState('');
